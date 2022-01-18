@@ -16,28 +16,16 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == HOMESERVER]
+        constraints: [node.platform.os == linux]
       labels:
         # traefik
         - traefik.enable=true
         - traefik.docker.network=traefik_public
 
-        # traefikv1
-        #- traefik.frontend.rule=Host:portainer.codegameeat.com
-        #- traefik.port=9000
-        # uncomment if you want to protect portainer with traefik-forward-auth using traefikv1
-        # - traefik.frontend.auth.forward.address=http://traefik-forward-auth:4181
-        # - traefik.frontend.auth.forward.authResponseHeaders=X-Forwarded-User
-        # - traefik.frontend.auth.forward.trustForwardHeader=true
-
         # traefikv2
         - "traefik.http.routers.portainer.rule=Host(`portainer.codegameeat.com`)"
-        - "traefik.http.routers.portainer.entrypoints=https"
-        - "traefik.http.routers.portainer.tls=true"
-        - "traefik.http.routers.portainer.tls.certresolver=le"
+        - "traefik.http.routers.portainer.entrypoints=http"
         - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-        # uncomment if you want to protect portainer with traefik-forward-auth using traefikv2
-        # - "traefik.http.routers.portainer.middlewares=forward-auth"
 
   agent:
     image: portainer/agent
