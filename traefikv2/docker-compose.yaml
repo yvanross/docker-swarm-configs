@@ -8,7 +8,7 @@ services:
         published: 80
         protocol: tcp
     volumes:
-      - /var/run/user/1000/docker.sock:/var/run/docker.sock:ro
+      - ${XDG_RUNTIME_DIR}/docker.sock:/var/run/docker.sock:ro
       - ~/data/traefikv2/traefik.log:/traefik.log
         # - ~/var/data/traefikv2/acme.json:/acme.json
     networks:

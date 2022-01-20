@@ -1,4 +1,3 @@
 export PATH=~/bin:$PATH
-export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock
-export UID=$(id -u)
+export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
 export HOSTIP=$(hostname -I)

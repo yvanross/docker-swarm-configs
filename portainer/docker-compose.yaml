@@ -8,7 +8,7 @@ services:
       - "9000:9000"
     volumes:
       - ~/data/portainer:/data
-      - /var/run/user/${UID}/docker.sock:/var/run/docker.sock
+      - ${XDG_RUNTIME_DIR}/docker.sock:/var/run/docker.sock
       - ~/.local/share/docker/volumes:/var/lib/docker/volumes
     networks:
       - internal_portainer
