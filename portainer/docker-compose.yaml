@@ -18,7 +18,7 @@ services:
       - traefik.enable=true
       - traefik.docker.network=traefik_public
       # traefikv2
-      - "traefik.http.routers.portainer.rule=Host(`portainer.log430.duckdns.org`)"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.${HOSTIP}.nip.io`)"
       - "traefik.http.routers.portainer.entrypoints=http"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
 

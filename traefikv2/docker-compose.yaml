@@ -18,7 +18,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.log430.duckdns.org`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${HOSTIP}.nip.io`)"
       - "traefik.http.services.traefik.loadbalancer.server.port=8185"
         #- "--api.insecure=true"
       - "traefik.http.routers.traefik.service=api@internal"
