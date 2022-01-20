@@ -3,35 +3,32 @@ version: "3.2"
 services:
   app:
     image: traefik:v2.5
-    env_file: /var/data/config/traefikv2/traefikv2.env
     ports:
       - target: 80
         published: 80
         protocol: tcp
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /var/data/traefikv2/traefik.log:/traefik.log
-      - /var/data/traefikv2/acme.json:/acme.json
+      - /var/run/user/1000/docker.sock:/var/run/docker.sock:ro
+      - ~/data/traefikv2/traefik.log:/traefik.log
+        # - ~/var/data/traefikv2/acme.json:/acme.json
     networks:
       - traefik_public
     # Global mode makes an instance of traefik listen on _every_ node, so that regardless of which
     # node the request arrives on, it'll be forwarded to the correct backend service.
-    deploy:
-      mode: global
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.traefik.entrypoints=http"
-        - "traefik.http.routers.traefik.rule=Host(`traefik.codegameeat.com`)"
-        - "traefik.http.services.traefik.loadbalancer.server.port=8185"
-      placement:
-        constraints: [node.role == manager]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=http"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.log430.duckdns.org`)"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8185"
+        #- "--api.insecure=true"
+      - "traefik.http.routers.traefik.service=api@internal"
     command:
       # Enable Docker in Traefik, so that it reads labels from Docker services
       - --providers.docker
       # Do not expose all Docker services, only the ones explicitly exposed
       - --providers.docker.exposedbydefault=false
       # Enable Docker Swarm mod
-      - --providers.docker.swarmmode
+      #- --providers.docker.swarmmode
       # Create an entrypoint "http" listening on port 80
       - --entrypoints.http.address=:80
       # Enable the access log, with HTTP requests
