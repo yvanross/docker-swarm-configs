@@ -5,7 +5,7 @@ services:
     image: portainer/portainer-ce
     command: --tlsskipverify
     ports:
-      - "9000:9000"
+      - 9000
     volumes:
       - ~/data/portainer:/data
       - ${XDG_RUNTIME_DIR}/docker.sock:/var/run/docker.sock
@@ -18,7 +18,7 @@ services:
       - traefik.enable=true
       - traefik.docker.network=traefik_public
       # traefikv2
-      - "traefik.http.routers.portainer.rule=Host(`portainer.${HOSTIP}.nip.io`)"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN:?err}`)"
       - "traefik.http.routers.portainer.entrypoints=http"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
 
