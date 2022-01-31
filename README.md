@@ -2,7 +2,7 @@
 
 ## Prérequis
 
-- Docker installé en *rootless*
+- Docker installé en *rootless* et docker-compose
 
 ## Étapes
 
