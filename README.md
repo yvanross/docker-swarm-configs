@@ -29,13 +29,24 @@ Ensuite exécuter la commande `sudo sysctl --system`
 ln -s ~/chemin/vers/repo/portainer/traefikv2.service ~/.config/systemd/user/traefikv2.service
 ln -s ~/chemin/vers/repo/portainer/portainer.service ~/.config/systemd/user/portainer.service
 ```
+5. Ouvrir session screen et démarrer docker:
+```
+screen
+systemctl --user start docker.service
+```
 
-5. Démarrer les services:
+6. Créer le network externe:
+```bash
+docker network create traefik_public
+```
+
+7. Démarrer les services:
 
 ```bash
-systemctl --user start docker.service #Seulement si vous n'avez pas déjà démarré docker
 systemctl --user start traefikv2.service
 systemctl --user start portainer.service
 ```
 
-6. Vous avez maintenant accès à traefik via `http://traefik.YOUR_DOMAIN` et à portainer via `http://portainer.YOUR_DOMAIN`
+8. Detacher de screen en conservant la session active: `ctrl a d`
+
+9. Vous avez maintenant accès à traefik via `http://traefik.YOUR_DOMAIN` et à portainer via `http://portainer.YOUR_DOMAIN`
