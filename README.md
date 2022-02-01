@@ -4,7 +4,7 @@
 ## Connection au serveur virtuel
 ssh docker@YOUR_DOMAIN
 Changer le mot de passe avec la commande
-```
+```/
 passwd
 ```
 
@@ -21,38 +21,47 @@ sudo chmod +x /usr/local/bin/docker-compose
 1. Configurer les variables d'environnement (`~/.config/environment.d/10-docker.conf`):
    
 ```
-mkdir -p ~/.config/environment.d/10-docker.conf
+mkdir -p ~/.config/environment.d
 vim ~/.config/environment.d/10-docker.conf
 ```
 Ajouter le texte suivant
 ```
-DOMAIN=YOUR_DOMAIN_HERE
+DOMAIN=YOUR_DOMAIN_HERE.nip.io
 DOCKER_HOST=unix:///run/user/YOUR_USER_UID_HERE/docker.sock
 ```
 exemple:
 ```
 DOMAIN=YOUR_DOMAIN.nip.io
-DOCKER_HOST=unix:///run/user/1003/docker.sock
+DOCKER_HOST=unix:///run/user/YOUR_USER_UID_HERE/docker.sock
 ```
+utiliser la commande suivante pour obtenir le docker user id:
+```
+id -u docker
+```
+1. Avec un compte administrateur,
 
-2. Avec un compte administrateur, `sudo vim /etc/systcl.conf` pour y ajouter cette ligne:
-
+```
+su cc-yross
+sudo vim /etc/sysctl.conf
+```
+ y ajouter cette ligne:
 ```
 net.ipv4.ip_unprivileged_port_start=80
 ```
 
 Ensuite exécuter la commande `sudo sysctl --system`
 
-3. Cloner ce répertoire: `git clone git@github.com:yvanross/docker-swarm-config.git`
-   ```
-   cd LOG430-docker-swarm-config
-   git checkout master
+Retourner sur le user docker avec la commande exit
 
-   ```
+1. Cloner ce répertoire: `git clone https://github.com/yvanross/docker-swarm-configs.git`
 
-4. Modifier `traefikv2/traefikv2.service` et `portainer/portainer.service` pour que les chemins des répertoires correspondent à votre configuration.
+Generate Github personnal access token
+https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+
+1. Modifier `traefikv2/traefikv2.service` et `portainer/portainer.service` pour que les chemins des répertoires correspondent à votre configuration.
 ```
 whereis docker-compose
+cd docker-swarm-config/
 vim traefikv2/traefikv2.service
 vim portainer/portainer.service
 dockerd-rootless-setuptool.sh install
@@ -88,12 +97,27 @@ docker network create traefik_public
 ```bash
 systemctl --user start traefikv2.service
 systemctl --user start portainer.service
+
+# Si les variables d'environnement sont mis après avoir configurer les services
+systemctl --user daemon-reload
+
+# pour arrèter
+systemctl --user stop portainer.service
 ```
 
 8. Detacher de screen en conservant la session active: `ctrl a d`
 
-9. Vous avez maintenant accès à traefik via `http://traefik.YOUR_DOMAIN` et à portainer via `http://portainer.YOUR_DOMAIN`
+9. Vous avez maintenant accès à traefik via `http://traefik.YOUR_DOMAIN.nip.io` et à portainer via `http://portainer.YOUR_DOMAIN.nip.io`
 
 
 Voir [Portainer configuration](PORTAINER-CONFIG.MD)
 Voir [Portainer docker file](PORTAINER.MD)
+
+# pour débugger
+journalctl -xe
+
+pour traefik
+Dans folder docker-swarm-configs/traefikv2, rouler:
+
+DOMAIN=1.2.3.4.nip.io docker-compose up
+Evidemment le domaine tu mets la vrai valeur, pas 1.2.3.4 
