@@ -41,3 +41,16 @@ Le tableau ci-dessous décrit les détails de ce qui peut être configuré
 |`NOMSERVICE`| Nom du service | **Unique pour l'équipe** |
 |`HOST_DOMAIN` | Domaine de l'hôte | Doit pointer vers la machine contenant le Docker Host |
 
+
+## Pour tester le déploiement sur la machine virtuelle
+
+http://HOST_DOMAIN.nip.io:3000/
+
+
+ tu peux éviter de passer par les ports en n'exposant pas de ports publics (donc un port serait décrit par - 3000 plutôt que - 3001:3000), et ensuite tu peux utiliser traefik pour faire le routage par le host de cette facon: serviceName.10.194.33.153.nip.io (direct sur le port 80).  Voir la section label du docker-compose précédent.
+ 
+ Le service devrait être disponible à:
+ http://service_discovery.eq4.HOST_NAME.nip.io
+
+
+Pour un service programmé dans le cadre du projet, qui utilisait l'API de docker, des fonctionnalités de cgroupv2 étaient nécessaires pour fonctionner en rootless. C'est extrêmement simple à changer (ajouter systemd.unified_cgroup_hierarchy=1 à GRUB_CMDLINE_LINUX dans GRUB )
